@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Rubik's Cube Solver</title>
+
+    <!-- Google Fonts Import -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CSS (Keep ALL styles exactly as in the previous working version) --- */
+        :root { /* ... */ --bg-color-light: #f0f0f0; --text-color-light: #333; --panel-bg-color-light: #ffffff; --header-bg-color-light: #4a90e2; --header-text-color-light: #ffffff; --button-bg-color-light: #ffffff; --button-text-color-light: #4a90e2; --button-border-color-light: #4a90e2; --button-hover-bg-color-light: #e0e0e0; --button-active-bg-color-light: #d0d0d0; --cube-bg-color-light: #e0e0e0; --modal-bg-color-light: #ffffff; --modal-header-color-light: #d9534f; --modal-button-cancel-bg-light: #f0f0f0; --modal-button-cancel-border-light: #ccc; --modal-button-confirm-bg-light: #d9534f; --modal-button-confirm-text-light: #ffffff; --settings-panel-bg-light: #f8f8f8; --settings-separator-color-light: #ddd; --slider-thumb-bg-light: #4a90e2; --slider-track-bg-light: #ccc; --stop-button-bg-light: #ff4d4d; --stop-button-text-light: #ffffff; --stop-button-border-light: #e60000; --stop-button-hover-bg-light: #ff6666; --bg-color-dark: #2c2c2c; --text-color-dark: #f1f1f1; --panel-bg-color-dark: #3a3a3a; --header-bg-color-dark: #336aaa; --header-text-color-dark: #f1f1f1; --button-bg-color-dark: #4a4a4a; --button-text-color-dark: #a0c8f0; --button-border-color-dark: #5a8bcd; --button-hover-bg-color-dark: #5a5a5a; --button-active-bg-color-dark: #6a6a6a; --cube-bg-color-dark: #404040; --modal-bg-color-dark: #3a3a3a; --modal-header-color-dark: #e76f6b; --modal-button-cancel-bg-dark: #5a5a5a; --modal-button-cancel-border-dark: #777; --modal-button-confirm-bg-dark: #e76f6b; --modal-button-confirm-text-dark: #ffffff; --settings-panel-bg-dark: #333333; --settings-separator-color-dark: #555; --slider-thumb-bg-dark: #5a8bcd; --slider-track-bg-dark: #555; --stop-button-bg-dark: #e63939; --stop-button-text-dark: #ffffff; --stop-button-border-dark: #b30000; --stop-button-hover-bg-dark: #ff4d4d; --toggle-bg-on: #4a90e2; --toggle-bg-off: #ccc;}
+        body.dark-theme { --toggle-bg-on: #5a8bcd; --toggle-bg-off: #555;}
+        body { /* ... */ margin: 0; font-family: 'Roboto', sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow: hidden; transition: background-color 0.3s ease, color 0.3s ease; }
+        body { /* Light */ --bg-color: var(--bg-color-light); --text-color: var(--text-color-light); --panel-bg-color: var(--panel-bg-color-light); --header-bg-color: var(--header-bg-color-light); --header-text-color: var(--header-text-color-light); --button-bg-color: var(--button-bg-color-light); --button-text-color: var(--button-text-color-light); --button-border-color: var(--button-border-color-light); --button-hover-bg-color: var(--button-hover-bg-color-light); --button-active-bg-color: var(--button-active-bg-color-light); --cube-bg-color: var(--cube-bg-color-light); --modal-bg-color: var(--modal-bg-color-light); --modal-header-color: var(--modal-header-color-light); --modal-button-cancel-bg: var(--modal-button-cancel-bg-light); --modal-button-cancel-border: var(--modal-button-cancel-border-light); --modal-button-confirm-bg: var(--modal-button-confirm-bg-light); --modal-button-confirm-text: var(--modal-button-confirm-text-light); --settings-panel-bg: var(--settings-panel-bg-light); --settings-separator-color: var(--settings-separator-color-light); --slider-thumb-bg: var(--slider-thumb-bg-light); --slider-track-bg: var(--slider-track-bg-light); --stop-button-bg: var(--stop-button-bg-light); --stop-button-text: var(--stop-button-text-light); --stop-button-border: var(--stop-button-border-light); --stop-button-hover-bg: var(--stop-button-hover-bg-light); }
+        body.dark-theme { /* Dark */ --bg-color: var(--bg-color-dark); --text-color: var(--text-color-dark); --panel-bg-color: var(--panel-bg-color-dark); --header-bg-color: var(--header-bg-color-dark); --header-text-color: var(--header-text-color-dark); --button-bg-color: var(--button-bg-color-dark); --button-text-color: var(--button-text-color-dark); --button-border-color: var(--button-border-color-dark); --button-hover-bg-color: var(--button-hover-bg-color-dark); --button-active-bg-color: var(--button-active-bg-color-dark); --cube-bg-color: var(--cube-bg-color-dark); --modal-bg-color: var(--modal-bg-color-dark); --modal-header-color: var(--modal-header-color-dark); --modal-button-cancel-bg: var(--modal-button-cancel-bg-dark); --modal-button-cancel-border: var(--modal-button-cancel-border-dark); --modal-button-confirm-bg: var(--modal-button-confirm-bg-dark); --modal-button-confirm-text: var(--modal-button-confirm-text-dark); --settings-panel-bg: var(--settings-panel-bg-dark); --settings-separator-color: var(--settings-separator-color-dark); --slider-thumb-bg: var(--slider-thumb-bg-dark); --slider-track-bg: var(--slider-track-bg-dark); --stop-button-bg: var(--stop-button-bg-dark); --stop-button-text: var(--stop-button-text-dark); --stop-button-border: var(--stop-button-border-dark); --stop-button-hover-bg: var(--stop-button-hover-bg-dark); }
+        #header { /* ... */ width: 100%; padding: 10px 0; background-color: var(--header-bg-color); color: var(--header-text-color); text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 15px; display: flex; justify-content: center; align-items: center; transition: background-color 0.3s ease; }
+        #controls { /* ... */ display: flex; gap: 15px; align-items: center; padding: 0 15px; }
+        #controls button { /* ... */ padding: 7px 12px; font-size: 14px; cursor: pointer; background-color: var(--button-bg-color); color: var(--button-text-color); border: 1px solid var(--button-border-color); border-radius: 5px; transition: background-color 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s, transform 0.1s ease-out; }
+        #controls button:hover { /* ... */ transform: translateY(-1px); background-color: var(--button-hover-bg-color); }
+        #controls button:active { /* ... */ transform: translateY(0px); background-color: var(--button-active-bg-color); }
+        #controls button:disabled { /* ... */ opacity: 0.5; cursor: not-allowed; background-color: var(--button-hover-bg-color); transform: none; }
+        #stop-button { background-color: var(--stop-button-bg); color: var(--stop-button-text); border-color: var(--stop-button-border); }
+        #stop-button:hover { background-color: var(--stop-button-hover-bg); }
+        #logo-area { display: flex; align-items: center; margin: 0 5px; }
+        .logo-text { font-family: 'Montserrat', 'Roboto', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--header-text-color); letter-spacing: 0.5px; }
+        #cube-container { width: 80vw; max-width: 600px; height: 60vh; max-height: 500px; background-color: var(--cube-bg-color); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-bottom: 15px; position: relative; touch-action: none; transition: background-color 0.3s ease; }
+        #description { /* ... */ max-width: 600px; width: 80vw; padding: 15px; background-color: var(--panel-bg-color); border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); text-align: center; font-size: 14px; line-height: 1.5; transition: background-color 0.3s ease, color 0.3s ease; }
+        #description strong { color: var(--button-text-color); }
+        .modal-overlay { /* ... */ display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); justify-content: center; align-items: center; z-index: 1000; opacity: 0; transition: opacity 0.2s ease-in-out; }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-content { /* ... */ background-color: var(--modal-bg-color); color: var(--text-color); padding: 25px 35px; border-radius: 8px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.25); transform: scale(0.95); opacity: 0; transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease-out, opacity 0.2s ease-out; }
+        .modal-overlay.active .modal-content { transform: scale(1); opacity: 1; }
+        .modal-content h3 { /* ... */ margin-top: 0; margin-bottom: 15px; color: var(--modal-header-color); font-weight: 600; }
+        .modal-content p#modal-message { /* Added for solver status */ margin-bottom: 15px; min-height: 1.5em;}
+        .modal-buttons { /* ... */ margin-top: 20px; }
+        .modal-buttons button { /* ... */ padding: 9px 22px; margin: 0 10px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: 500; transition: background-color 0.2s, transform 0.1s ease-out; }
+        .modal-buttons button:hover { transform: translateY(-1px); }
+        .modal-buttons button:active { transform: translateY(0px); }
+        #modal-cancel { /* ... */ background-color: var(--modal-button-cancel-bg); color: var(--text-color); border: 1px solid var(--modal-button-cancel-border); }
+        #modal-confirm { /* ... */ background-color: var(--modal-button-confirm-bg); color: var(--modal-button-confirm-text); border: none; }
+        #settings-panel { display: flex; flex-direction: column; position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background-color: var(--settings-panel-bg); box-shadow: -3px 0 15px rgba(0, 0, 0, 0.2); z-index: 1001; padding: 20px; padding-top: 50px; box-sizing: border-box; transition: transform 0.3s ease-out, background-color 0.3s ease; color: var(--text-color); }
+        #settings-panel.active { transform: translateX(-300px); }
+        #settings-panel h2 { /* ... */ margin-top: 0; margin-bottom: 25px; text-align: center; font-size: 1.2rem; color: var(--text-color); }
+        .settings-section { /* ... */ margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--settings-separator-color); transition: border-color 0.3s ease; }
+        .settings-section label { /* ... */ display: block; margin-bottom: 10px; font-weight: 500; font-size: 0.95rem; }
+        #close-settings-button { /* ... */ position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.8rem; line-height: 1; color: var(--text-color); cursor: pointer; padding: 5px; opacity: 0.7; transition: opacity 0.2s, transform 0.2s; }
+        #close-settings-button:hover { opacity: 1; transform: rotate(90deg); }
+        #animation-speed-slider { /* ... */ width: 100%; cursor: pointer; accent-color: var(--slider-thumb-bg); }
+        #animation-speed-slider::-webkit-slider-thumb { background: var(--slider-thumb-bg); } #animation-speed-slider::-moz-range-thumb { background: var(--slider-thumb-bg); border: none; border-radius: 50%; } #animation-speed-slider::-webkit-slider-runnable-track { background: var(--slider-track-bg); height: 6px; border-radius: 3px; } #animation-speed-slider::-moz-range-track { background: var(--slider-track-bg); height: 6px; border-radius: 3px; }
+        #speed-value-display { /* ... */ display: inline-block; margin-left: 10px; font-size: 0.9rem; opacity: 0.8; }
+        #solve-delay-slider { width: 100%; cursor: pointer; accent-color: var(--slider-thumb-bg); } /* NEW */
+        #solve-delay-value-display { display: inline-block; margin-left: 10px; font-size: 0.9rem; opacity: 0.8; } /* NEW */
+        .theme-options label { /* ... */ display: inline-block; margin-right: 15px; cursor: pointer; font-weight: normal; }
+        .theme-options input[type="radio"] { /* ... */ margin-right: 5px; cursor: pointer; accent-color: var(--button-text-color); }
+        .toggle-switch { display: flex; align-items: center; justify-content: space-between; }
+        .toggle-switch label { margin-bottom: 0; }
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--toggle-bg-off); transition: .3s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--toggle-bg-on); }
+        input:checked + .slider:before { transform: translateX(20px); }
+        .settings-footer { margin-top: auto; padding-top: 20px; text-align: center; font-size: 0.8rem; color: var(--text-color); opacity: 0.7; }
+    </style>
+</head>
+<body>
+    <!-- HTML Structure (Modal text updated, Settings panel updated) -->
+    <div id="header"> <div id="controls"> <button id="solve-button" title="Solve Cube">💡 Solve</button> <button id="shuffle-button" title="Shuffle Cube">🔀 Shuffle</button> <button id="stop-button" title="Stop Scramble/Solve" style="display: none;">⏹️ Stop</button> <div id="logo-area"> <span class="logo-text">Rubix</span> </div> <button id="settings-button" title="Settings">⚙️ Settings</button> </div> </div>
+    <div id="cube-container"></div>
+    <div id="description"> <p>A <strong>Real-Time</strong> Interactive Rubik's Cube Simulator and Solver. Made With ❤️ by Yousef Elgarhy.</p> </div> <!-- Updated Description -->
+
+    <!-- Modal updated for solver status -->
+    <div id="solve-confirm-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modal-title">SOLVE CUBE?</h3> <!-- Changed title -->
+            <p id="modal-message">This will attempt to solve the cube from its current state using an algorithm. Proceed?</p> <!-- Changed text -->
+            <div class="modal-buttons">
+                <button id="modal-cancel">Cancel</button>
+                <button id="modal-confirm">Solve!</button> <!-- Changed text -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Panel updated -->
+    <div id="settings-panel">
+        <button id="close-settings-button" title="Close Settings">&times;</button>
+        <h2>Settings</h2>
+        <div class="settings-section">
+            <label for="animation-speed-slider">Move Animation Speed: <span id="speed-value-display">200ms</span></label>
+            <input type="range" id="animation-speed-slider" min="50" max="1000" step="10" value="200">
+        </div>
+         <div class="settings-section"> <!-- NEW Section for Solve Delay -->
+            <label for="solve-delay-slider">Delay Between Solve Steps: <span id="solve-delay-value-display">500ms</span></label>
+            <input type="range" id="solve-delay-slider" min="0" max="2000" step="50" value="500">
+        </div>
+        <div class="settings-section">
+            <label>Theme</label>
+            <div class="theme-options">
+                <label> <input type="radio" name="theme" value="light" checked> Light </label>
+                <label> <input type="radio" name="theme" value="dark"> Dark </label>
+            </div>
+        </div>
+        <div class="settings-section toggle-switch">
+            <label for="vibration-toggle">Vibration Feedback</label>
+            <label class="switch">
+                <input type="checkbox" id="vibration-toggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <p class="settings-footer">Made with Love ❤️ By Yousef Elgarhy</p>
+    </div>
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- Kociemba Solver Library (Loaded Locally) -->
+    <script src="kociemba.js"></script>
+
+    <script>
+        // --- Config, Colors, Globals, DOM Elements, Settings Var ---
+        const CUBE_SIZE = 1; const SPACING = 0.05; const N = 3; const SHUFFLE_MOVES = 30;
+        const VIBRATION_DURATION = 35;
+        const SOLVER_DELAY_DEFAULT = 500; // Default delay between solve steps in ms
+
+        // Use hex for internal mapping, char for solver string
+        const FACE_COLORS = {
+            U: 0xffffff, // White (Up) - Assuming +Y is Up
+            D: 0xffff00, // Yellow (Down) - Assuming -Y is Down
+            F: 0x0000ff, // Blue (Front) - Assuming +Z is Front
+            B: 0x00ff00, // Green (Back) - Assuming -Z is Back
+            R: 0xffa500, // Orange (Right) - Assuming +X is Right
+            L: 0xff0000, // Red (Left) - Assuming -X is Left
+            INTERNAL: 0x1a1a1a // Black for internal faces
+        };
+        const FACE_CHARS = { // Map hex color back to face character for solver
+            [FACE_COLORS.U]: 'U', [FACE_COLORS.D]: 'D', [FACE_COLORS.F]: 'F',
+            [FACE_COLORS.B]: 'B', [FACE_COLORS.R]: 'R', [FACE_COLORS.L]: 'L'
+        };
+        // Mapping from material index (geometry face) to initial world normal direction
+        // Adjust these if your coordinate system or initial cube orientation differs
+        const FACE_INDEX_TO_NORMAL = [
+            new THREE.Vector3( 1,  0,  0), // 0: +X (Right - Orange) -> R
+            new THREE.Vector3(-1,  0,  0), // 1: -X (Left - Red) -> L
+            new THREE.Vector3( 0,  1,  0), // 2: +Y (Up - White) -> U
+            new THREE.Vector3( 0, -1,  0), // 3: -Y (Down - Yellow) -> D
+            new THREE.Vector3( 0,  0,  1), // 4: +Z (Front - Blue) -> F
+            new THREE.Vector3( 0,  0, -1)  // 5: -Z (Back - Green) -> B
+        ];
+
+        let scene, camera, renderer, controls; let cubeGroup; let cubies = [];
+        let raycaster, mouse;
+        let intersectedObject = null, startPoint = null, dragNormal = null;
+        let isDragging = false, isAnimating = false, isSequenceAnimating = false;
+        let stopSequenceRequested = false;
+
+        const solveButton = document.getElementById('solve-button');
+        const shuffleButton = document.getElementById('shuffle-button');
+        const stopButton = document.getElementById('stop-button');
+        const settingsButton = document.getElementById('settings-button');
+        const settingsPanel = document.getElementById('settings-panel');
+        const closeSettingsButton = document.getElementById('close-settings-button');
+        const speedSlider = document.getElementById('animation-speed-slider');
+        const speedDisplay = document.getElementById('speed-value-display');
+        const solveDelaySlider = document.getElementById('solve-delay-slider'); // NEW
+        const solveDelayDisplay = document.getElementById('solve-delay-value-display'); // NEW
+        const themeRadios = document.querySelectorAll('input[name="theme"]');
+        const solveModal = document.getElementById('solve-confirm-modal');
+        const modalTitle = document.getElementById('modal-title'); // NEW
+        const modalMessage = document.getElementById('modal-message'); // NEW
+        const modalCancelButton = document.getElementById('modal-cancel');
+        const modalConfirmButton = document.getElementById('modal-confirm');
+        const cubeContainer = document.getElementById('cube-container');
+        const vibrationToggle = document.getElementById('vibration-toggle');
+
+        let MOVE_DURATION = 200;
+        let SOLVE_DELAY = SOLVER_DELAY_DEFAULT; // Delay between solver steps
+        let vibrationEnabled = true;
+
+        // --- Init ---
+        function init() {
+            loadSettings();
+            const container = document.getElementById('cube-container');
+            scene = new THREE.Scene();
+            const aspect = container.clientWidth / container.clientHeight;
+            camera = new THREE.PerspectiveCamera(50, aspect, 0.1, 1000);
+            camera.position.set(5, 5, 7); // Adjusted starting position slightly
+            camera.lookAt(0, 0, 0);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setClearColor(0x000000, 0);
+            container.appendChild(renderer.domElement);
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7); scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5); directionalLight.position.set(5, 10, 7.5); scene.add(directionalLight);
+
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.1;
+            controls.screenSpacePanning = false;
+            controls.minDistance = 5;
+            controls.maxDistance = 20;
+            controls.minPolarAngle = 0;
+            controls.maxPolarAngle = Math.PI;
+
+            raycaster = new THREE.Raycaster(); mouse = new THREE.Vector2();
+            createCube();
+
+            // Listeners (Added solve delay slider)
+            renderer.domElement.addEventListener('pointerdown', onPointerDown);
+            renderer.domElement.addEventListener('pointermove', onPointerMove);
+            renderer.domElement.addEventListener('pointerup', onPointerUp);
+            window.addEventListener('resize', onWindowResize);
+            solveButton.addEventListener('click', showSolveConfirmation);
+            shuffleButton.addEventListener('click', shuffleCubeAnimated);
+            stopButton.addEventListener('click', requestStopSequence);
+            settingsButton.addEventListener('click', toggleSettingsPanel);
+            closeSettingsButton.addEventListener('click', toggleSettingsPanel);
+            modalCancelButton.addEventListener('click', hideSolveConfirmation);
+            modalConfirmButton.addEventListener('click', () => {
+                 hideSolveConfirmation();
+                 solveCubeAlgorithmically(); // Call the NEW solver function
+            });
+            speedSlider.addEventListener('input', handleSpeedChange);
+            solveDelaySlider.addEventListener('input', handleSolveDelayChange); // NEW
+            themeRadios.forEach(radio => radio.addEventListener('change', handleThemeChange));
+            vibrationToggle.addEventListener('change', handleVibrationChange);
+
+            // Initialize Kociemba solver (usually requires this step)
+            try {
+                // Check if kociemba object exists (loaded from local file)
+                if (typeof kociemba === 'undefined') {
+                    throw new Error("kociemba.js script not loaded or failed to define 'kociemba' object.");
+                }
+                kociemba.init();
+                console.log("Kociemba solver initialized successfully.");
+            } catch (e) {
+                console.error("Failed to initialize Kociemba solver:", e);
+                alert("Error: Could not initialize the Rubik's Cube solver library (kociemba.js).\nMake sure 'kociemba.js' is in the same folder as the HTML file.\nSolving will not work.");
+                solveButton.disabled = true;
+                solveButton.title = "Solver library failed to load";
+            }
+
+            animate();
+        }
+
+        // --- Settings Functions (Added solve delay handling) ---
+        function loadSettings() {
+             const savedSpeed = localStorage.getItem('rubiksAnimationSpeed');
+             MOVE_DURATION = savedSpeed ? parseInt(savedSpeed, 10) : 200;
+             speedSlider.value = MOVE_DURATION;
+             speedDisplay.textContent = `${MOVE_DURATION}ms`;
+
+             const savedSolveDelay = localStorage.getItem('rubiksSolveDelay'); // NEW
+             SOLVE_DELAY = savedSolveDelay ? parseInt(savedSolveDelay, 10) : SOLVER_DELAY_DEFAULT; // NEW
+             solveDelaySlider.value = SOLVE_DELAY; // NEW
+             solveDelayDisplay.textContent = `${SOLVE_DELAY}ms`; // NEW
+
+             const savedTheme = localStorage.getItem('rubiksTheme');
+             const defaultTheme = 'light';
+             const currentTheme = savedTheme || defaultTheme;
+             applyTheme(currentTheme);
+             document.querySelector(`input[name="theme"][value="${currentTheme}"]`).checked = true;
+             const savedVibration = localStorage.getItem('rubiksVibrationEnabled');
+             vibrationEnabled = (savedVibration === null) ? true : (savedVibration === 'true');
+             vibrationToggle.checked = vibrationEnabled;
+        }
+        function handleSpeedChange(event) {
+            MOVE_DURATION = parseInt(event.target.value, 10);
+            speedDisplay.textContent = `${MOVE_DURATION}ms`;
+            localStorage.setItem('rubiksAnimationSpeed', MOVE_DURATION);
+        }
+        function handleSolveDelayChange(event) { // NEW
+            SOLVE_DELAY = parseInt(event.target.value, 10);
+            solveDelayDisplay.textContent = `${SOLVE_DELAY}ms`;
+            localStorage.setItem('rubiksSolveDelay', SOLVE_DELAY);
+        }
+        function handleThemeChange(event) { const newTheme = event.target.value; applyTheme(newTheme); localStorage.setItem('rubiksTheme', newTheme); }
+        function applyTheme(themeName) { if (themeName === 'dark') document.body.classList.add('dark-theme'); else document.body.classList.remove('dark-theme'); }
+        function toggleSettingsPanel() { settingsPanel.classList.toggle('active'); }
+        function handleVibrationChange(event) { vibrationEnabled = event.target.checked; localStorage.setItem('rubiksVibrationEnabled', vibrationEnabled); if (vibrationEnabled) vibrate(VIBRATION_DURATION / 2); }
+
+        // --- Vibration Function (Unchanged) ---
+        function vibrate(duration) { if (vibrationEnabled && navigator.vibrate) { try { navigator.vibrate(duration); } catch (e) { console.warn("Vibration failed:", e); } } }
+
+        // --- Create Cube (Assign colors based on standard face definitions) ---
+        function createCube() {
+            if (cubeGroup) {
+                // Properly dispose of old materials and geometries if necessary
+                cubies.forEach(cubie => {
+                    if (cubie.geometry) cubie.geometry.dispose();
+                    if (cubie.material) {
+                        if (Array.isArray(cubie.material)) {
+                            cubie.material.forEach(mat => mat.dispose());
+                        } else {
+                            cubie.material.dispose();
+                        }
+                    }
+                });
+                scene.remove(cubeGroup);
+            }
+            cubeGroup = new THREE.Group();
+            cubies = [];
+            const offset = (N - 1) / 2;
+            const geom = new THREE.BoxGeometry(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE);
+
+            for (let x = 0; x < N; x++) {
+                for (let y = 0; y < N; y++) {
+                    for (let z = 0; z < N; z++) {
+                        if (x > 0 && x < N - 1 && y > 0 && y < N - 1 && z > 0 && z < N - 1) continue; // Skip inner core
+
+                        // Assign colors based on the *initial* position relative to center
+                        // Material order: +X, -X, +Y, -Y, +Z, -Z
+                        const mats = [
+                            new THREE.MeshStandardMaterial({ color: x === N - 1 ? FACE_COLORS.R : FACE_COLORS.INTERNAL }), // Right (+X)
+                            new THREE.MeshStandardMaterial({ color: x === 0     ? FACE_COLORS.L : FACE_COLORS.INTERNAL }), // Left (-X)
+                            new THREE.MeshStandardMaterial({ color: y === N - 1 ? FACE_COLORS.U : FACE_COLORS.INTERNAL }), // Up (+Y)
+                            new THREE.MeshStandardMaterial({ color: y === 0     ? FACE_COLORS.D : FACE_COLORS.INTERNAL }), // Down (-Y)
+                            new THREE.MeshStandardMaterial({ color: z === N - 1 ? FACE_COLORS.F : FACE_COLORS.INTERNAL }), // Front (+Z)
+                            new THREE.MeshStandardMaterial({ color: z === 0     ? FACE_COLORS.B : FACE_COLORS.INTERNAL })  // Back (-Z)
+                        ];
+
+                        const c = new THREE.Mesh(geom, mats);
+                        c.position.set(
+                            (x - offset) * (CUBE_SIZE + SPACING),
+                            (y - offset) * (CUBE_SIZE + SPACING),
+                            (z - offset) * (CUBE_SIZE + SPACING)
+                        );
+                        // Store the initial logical position AND the initial world matrix
+                        // We need the initial matrix to correctly calculate face normals later
+                        c.userData.logicalPosition = new THREE.Vector3(x, y, z);
+                        c.userData.initialMatrix = c.matrixWorld.clone(); // Store initial transform
+                        cubeGroup.add(c);
+                        cubies.push(c);
+                    }
+                }
+            }
+            scene.add(cubeGroup);
+            console.log("Cube created/reset.");
+        }
+
+        // --- Event Handlers (Unchanged, OrbitControls handled within PointerDown/Up/rotateLayer) ---
+        function getIntersect(event){ const b=renderer.domElement.getBoundingClientRect(); mouse.x=((event.clientX-b.left)/b.width)*2-1; mouse.y=-((event.clientY-b.top)/b.height)*2+1; raycaster.setFromCamera(mouse,camera); const i=raycaster.intersectObjects(cubies); if(i.length>0){ const int=i[0]; const f=int.face.materialIndex; if(int.object.material[f].color.getHex()!==FACE_COLORS.INTERNAL) return int; } return null; }
+        function onPointerDown(event){ if(isAnimating||isSequenceAnimating)return; const i=getIntersect(event); if(i){ isDragging=true; controls.enabled=false; intersectedObject=i.object; startPoint=i.point.clone(); dragNormal=i.face.normal.clone(); dragNormal.transformDirection(intersectedObject.matrixWorld).round(); }else{ isDragging=false; } }
+        function onPointerMove(event){} // Can be used for interactive slice dragging later
+        function onPointerUp(event){ if(!isDragging||!startPoint||isAnimating||isSequenceAnimating){ if(isDragging) controls.enabled = true; isDragging=false; return; } isDragging=false; const b=renderer.domElement.getBoundingClientRect(); const eM=new THREE.Vector2(((event.clientX-b.left)/b.width)*2-1,-((event.clientY-b.top)/b.height)*2+1); const sS=startPoint.clone().project(camera); const dV=eM.clone().sub(sS); if(dV.length()<0.05){ controls.enabled = true; resetDragState(); return; } const r=determineRotation(dragNormal,dV); if(r){ rotateLayer(r.axis,r.layer,r.angle) .then(()=>{ controls.enabled = true; }) .catch(()=>{ controls.enabled = true; }); } else { controls.enabled = true; } resetDragState(); }
+        function resetDragState(){ intersectedObject=null; startPoint=null; dragNormal=null; isDragging=false; }
+        function onWindowResize(){ const c=document.getElementById('cube-container'); if(!c) return; camera.aspect=c.clientWidth/c.clientHeight; camera.updateProjectionMatrix(); renderer.setSize(c.clientWidth,c.clientHeight); }
+
+        // --- Rotation Logic (determineRotation unchanged, rotateLayer ensures controls disabled during anim) ---
+        function determineRotation(faceNormal, dragVectorScreen){ const camDir=new THREE.Vector3(); camera.getWorldDirection(camDir); const rAxis=new THREE.Vector3().crossVectors(camera.up, faceNormal).normalize(); const uAxis=new THREE.Vector3().crossVectors(faceNormal, rAxis).normalize(); const oScreen=startPoint.clone().project(camera); const rPtW=startPoint.clone().add(rAxis); const uPtW=startPoint.clone().add(uAxis); const rPtS=rPtW.project(camera); const uPtS=uPtW.project(camera); const rScreen=new THREE.Vector2().subVectors(rPtS, oScreen).normalize(); const uScreen=new THREE.Vector2().subVectors(uPtS, oScreen).normalize(); const dotR=dragVectorScreen.dot(rScreen); const dotU=dragVectorScreen.dot(uScreen); let rotAxis=new THREE.Vector3(); let sign=1; if(Math.abs(dotR)>Math.abs(dotU)){ rotAxis.copy(uAxis); sign=Math.sign(dotR); }else{ rotAxis.copy(rAxis); sign=-Math.sign(dotU); } let maxC=Math.max(Math.abs(rotAxis.x),Math.abs(rotAxis.y),Math.abs(rotAxis.z)); rotAxis.x=(Math.abs(rotAxis.x)/maxC>0.5)?Math.sign(rotAxis.x):0; rotAxis.y=(Math.abs(rotAxis.y)/maxC>0.5)?Math.sign(rotAxis.y):0; rotAxis.z=(Math.abs(rotAxis.z)/maxC>0.5)?Math.sign(rotAxis.z):0; if(rotAxis.lengthSq()<0.5) return null; const angle=sign*Math.PI/2; const pos=intersectedObject.userData.logicalPosition; let layer=0; if(Math.abs(rotAxis.x)>0.5) layer=pos.x; else if(Math.abs(rotAxis.y)>0.5) layer=pos.y; else if(Math.abs(rotAxis.z)>0.5) layer=pos.z; return { axis:rotAxis, layer:layer, angle:angle }; }
+
+        function rotateLayer(axis, layerIndex, angle) {
+            return new Promise((resolve, reject) => {
+                if (isAnimating) {
+                    console.warn("Animation already in progress, move skipped.");
+                    reject("Animation in progress");
+                    return;
+                }
+                isAnimating = true;
+                controls.enabled = false; // Disable controls during single move animation
+
+                const pivot = new THREE.Group();
+                scene.add(pivot);
+                const layerCubies = [];
+                const rotationMatrix = new THREE.Matrix4().makeRotationAxis(axis, angle);
+                const offset = (N - 1) / 2;
+
+                cubies.forEach(c => {
+                    const pos = c.userData.logicalPosition;
+                    let shouldMove = false;
+                    // Use a tolerance for floating point comparisons
+                    const tolerance = 0.01;
+                    if (Math.abs(axis.x) > 0.5 && Math.abs(pos.x - layerIndex) < tolerance) shouldMove = true;
+                    else if (Math.abs(axis.y) > 0.5 && Math.abs(pos.y - layerIndex) < tolerance) shouldMove = true;
+                    else if (Math.abs(axis.z) > 0.5 && Math.abs(pos.z - layerIndex) < tolerance) shouldMove = true;
+
+                    if (shouldMove) {
+                        pivot.attach(c); // Attaches c to pivot, preserving world transform initially
+                        layerCubies.push(c);
+                    }
+                });
+
+
+                if (layerCubies.length === 0) {
+                    console.warn("No cubies found for rotation:", axis.toArray().map(n=>n.toFixed(1)), layerIndex);
+                    isAnimating = false;
+                    controls.enabled = true; // Re-enable controls
+                    scene.remove(pivot);
+                    resolve();
+                    return;
+                }
+
+                const startQuaternion = pivot.quaternion.clone();
+                const endQuaternion = new THREE.Quaternion().setFromAxisAngle(axis, angle).multiply(startQuaternion);
+                const startTime = performance.now();
+
+                function animateRotation() {
+                    const elapsedTime = performance.now() - startTime;
+                    const fraction = Math.min(elapsedTime / MOVE_DURATION, 1);
+                    const easedFraction = fraction * fraction * (3 - 2 * fraction); // Smoothstep easing
+
+                    pivot.quaternion.slerpQuaternions(startQuaternion, endQuaternion, easedFraction);
+
+                    if (fraction < 1 && !stopSequenceRequested) { // Check stop request here too
+                        requestAnimationFrame(animateRotation);
+                    } else {
+                         // Ensure final state is exact
+                        pivot.quaternion.copy(endQuaternion);
+                        pivot.updateMatrixWorld(); // Important: update matrix before detaching
+
+                        // Update logical positions AFTER animation
+                        layerCubies.forEach(c => {
+                            cubeGroup.attach(c); // Attach back to main group
+
+                            // Calculate new logical position
+                            const logicalPos = c.userData.logicalPosition.clone();
+                            const tempVec = new THREE.Vector3();
+
+                            // Transform logical coordinates (relative to center 0,0,0)
+                            tempVec.copy(logicalPos).subScalar(offset);
+                            // Use a clean rotation matrix for logical update to avoid drift
+                            const cleanRotationMatrix = new THREE.Matrix4().makeRotationAxis(axis.clone().round(), angle);
+                            tempVec.applyMatrix4(cleanRotationMatrix);
+                            tempVec.round(); // Crucial for snapping to grid
+                            tempVec.addScalar(offset);
+                            c.userData.logicalPosition.copy(tempVec);
+
+                        });
+
+                        scene.remove(pivot);
+                        isAnimating = false;
+                        // Don't re-enable controls here if part of a sequence
+                        // It will be re-enabled by applyMovesAnimated or onPointerUp
+                        vibrate(VIBRATION_DURATION);
+                        resolve();
+                    }
+                }
+                animateRotation();
+            });
+        }
+
+
+        // --- NEW: Cube State Reading ---
+        function getCubeStateString() {
+            console.log("Reading cube state...");
+            // Order: U1-U9, R1-R9, F1-F9, D1-D9, L1-L9, B1-B9 (Standard Kociemba input)
+            // Facelets within a face are read row by row, e.g., U1 U2 U3 / U4 U5 U6 / U7 U8 U9
+            const facelets = { U: [], R: [], F: [], D: [], L: [], B: [] };
+            const centerOffset = (N - 1) / 2;
+            const epsilon = 0.1; // Tolerance for floating point comparisons
+
+            for (const cubie of cubies) {
+
+                cubie.updateMatrixWorld(); // Ensure world matrix is up-to-date
+
+                for (let i = 0; i < cubie.material.length; i++) {
+                    const material = cubie.material[i];
+                    const colorHex = material.color.getHex();
+
+                    if (colorHex !== FACE_COLORS.INTERNAL) { // Only process visible facelets
+                        const faceChar = FACE_CHARS[colorHex];
+                        if (!faceChar) {
+                            console.error("Unknown color found:", colorHex.toString(16), "on cubie at", cubie.position);
+                            continue;
+                        }
+
+                        // Get the world normal of this specific facelet
+                        // Use the *initial* normal and transform it by the cubie's *current* world matrix
+                        const normal = FACE_INDEX_TO_NORMAL[i].clone();
+                        const worldNormal = normal.transformDirection(cubie.matrixWorld).round(); // Round helps align with axes
+
+                        // Determine which face this world normal corresponds to (U, R, F, D, L, B)
+                        let targetFace = null;
+                        if (worldNormal.y > 1 - epsilon) targetFace = 'U';
+                        else if (worldNormal.x > 1 - epsilon) targetFace = 'R';
+                        else if (worldNormal.z > 1 - epsilon) targetFace = 'F';
+                        else if (worldNormal.y < -1 + epsilon) targetFace = 'D';
+                        else if (worldNormal.x < -1 + epsilon) targetFace = 'L';
+                        else if (worldNormal.z < -1 + epsilon) targetFace = 'B';
+
+                        if (targetFace) {
+                             // Store the color (faceChar) and the cubie's current logical position
+                             // We'll sort these later to get the correct U1-U9 etc. order
+                            facelets[targetFace].push({
+                                color: faceChar,
+                                // Clone position to avoid reference issues if cubie moves during processing
+                                pos: cubie.getWorldPosition(new THREE.Vector3()) // Use world position for sorting consistency
+                                                                                  // relative to the cube's origin (0,0,0)
+                            });
+                        } else {
+                             console.warn("Could not determine target face for normal:", worldNormal.toArray(), "color:", faceChar);
+                        }
+                    }
+                }
+            }
+
+             // Now sort the collected facelets for each face to match the Kociemba order
+             // Sorting needs to be based on the final world positions projected onto the face plane
+             // Example for U face (+Y normal): sort by world Z descending, then world X ascending
+             facelets.U.sort((a, b) => (b.pos.z - a.pos.z) || (a.pos.x - b.pos.x));
+             // R face (+X normal): sort by world Y descending, then world Z descending
+             facelets.R.sort((a, b) => (b.pos.y - a.pos.y) || (b.pos.z - a.pos.z));
+             // F face (+Z normal): sort by world Y descending, then world X ascending
+             facelets.F.sort((a, b) => (b.pos.y - a.pos.y) || (a.pos.x - b.pos.x));
+             // D face (-Y normal): sort by world Z ascending, then world X ascending
+             facelets.D.sort((a, b) => (a.pos.z - b.pos.z) || (a.pos.x - b.pos.x));
+              // L face (-X normal): sort by world Y descending, then world Z ascending
+             facelets.L.sort((a, b) => (b.pos.y - a.pos.y) || (a.pos.z - b.pos.z));
+             // B face (-Z normal): sort by world Y descending, then world X descending
+             facelets.B.sort((a, b) => (b.pos.y - a.pos.y) || (b.pos.x - a.pos.x));
+
+            // Construct the final string
+            let stateString = "";
+            try {
+                stateString += facelets.U.map(f => f.color).join('');
+                stateString += facelets.R.map(f => f.color).join('');
+                stateString += facelets.F.map(f => f.color).join('');
+                stateString += facelets.D.map(f => f.color).join('');
+                stateString += facelets.L.map(f => f.color).join('');
+                stateString += facelets.B.map(f => f.color).join('');
+
+                if (stateString.length !== 54) {
+                     console.error(`Generated state string length is ${stateString.length}, expected 54.`);
+                     console.error("Facelet counts:",
+                         `U:${facelets.U.length}`, `R:${facelets.R.length}`, `F:${facelets.F.length}`,
+                         `D:${facelets.D.length}`, `L:${facelets.L.length}`, `B:${facelets.B.length}`);
+                     // Log the actual colors found per face for debugging
+                     console.error("U colors:", facelets.U.map(f => f.color).join(''));
+                     console.error("R colors:", facelets.R.map(f => f.color).join(''));
+                     console.error("F colors:", facelets.F.map(f => f.color).join(''));
+                     console.error("D colors:", facelets.D.map(f => f.color).join(''));
+                     console.error("L colors:", facelets.L.map(f => f.color).join(''));
+                     console.error("B colors:", facelets.B.map(f => f.color).join(''));
+                     console.error("Generated String:", stateString);
+                     return null; // Indicate error
+                }
+                 console.log("Generated State String:", stateString);
+                 return stateString;
+
+            } catch (e) {
+                console.error("Error constructing state string:", e);
+                console.error("Problematic facelets object:", facelets);
+                return null;
+            }
+        }
+
+
+        // --- NEW: Parse Solver Moves ---
+        function parseSolverMoves(solverString) {
+            console.log("Parsing solver moves:", solverString);
+            const moves = [];
+            const parts = solverString.trim().split(/\s+/);
+            // Axis and Layer mapping: Which logical layer index corresponds to the face move?
+            // Remember N=3, so indices are 0, 1, 2. Offset is (N-1)/2 = 1.
+            const axisMap = {
+                'U': { axis: new THREE.Vector3(0, 1, 0), layer: N - 1 }, // Top layer (Y=2)
+                'D': { axis: new THREE.Vector3(0, 1, 0), layer: 0 },     // Bottom layer (Y=0), Note: D rotates layer 0 around +Y
+                'F': { axis: new THREE.Vector3(0, 0, 1), layer: N - 1 }, // Front layer (Z=2)
+                'B': { axis: new THREE.Vector3(0, 0, 1), layer: 0 },     // Back layer (Z=0), Note: B rotates layer 0 around +Z
+                'R': { axis: new THREE.Vector3(1, 0, 0), layer: N - 1 }, // Right layer (X=2)
+                'L': { axis: new THREE.Vector3(1, 0, 0), layer: 0 }      // Left layer (X=0), Note: L rotates layer 0 around +X
+            };
+
+            // Angle convention: Standard cube notation defines rotation direction
+            // looking AT the face. Our rotateLayer uses right-hand rule around the axis.
+            // Let's reconcile:
+            // U: Rotate layer Y=2 around +Y. U is CW -> -PI/2. U' is CCW -> +PI/2.
+            // D: Rotate layer Y=0 around +Y. D is CW -> -PI/2. D' is CCW -> +PI/2.
+            // R: Rotate layer X=2 around +X. R is CW -> -PI/2. R' is CCW -> +PI/2.
+            // L: Rotate layer X=0 around +X. L is CW -> -PI/2. L' is CCW -> +PI/2.
+            // F: Rotate layer Z=2 around +Z. F is CW -> -PI/2. F' is CCW -> +PI/2.
+            // B: Rotate layer Z=0 around +Z. B is CW -> -PI/2. B' is CCW -> +PI/2.
+            // *** Correction: Kociemba output uses standard notation. We need to map standard notation to our axis/angle.
+            // U/D -> axis (0,1,0). U layer 2, D layer 0. U angle -PI/2, U' +PI/2. D angle -PI/2, D' +PI/2.
+            // R/L -> axis (1,0,0). R layer 2, L layer 0. R angle -PI/2, R' +PI/2. L angle -PI/2, L' +PI/2.
+            // F/B -> axis (0,0,1). F layer 2, B layer 0. F angle -PI/2, F' +PI/2. B angle -PI/2, B' +PI/2.
+
+             const angleMap = {
+                "'": Math.PI / 2,  // Prime (CCW relative to axis for U/D/R/L/F/B) -> Positive angle
+                "2": -Math.PI,     // Double move (180 degrees) -> Negative PI (will apply twice later if needed)
+                "": -Math.PI / 2   // Normal (CW relative to axis) -> Negative angle
+             };
+
+
+            for (const part of parts) {
+                if (!part) continue;
+                const face = part[0].toUpperCase();
+                const modifier = part.length > 1 ? part.slice(1) : ''; // Handle modifiers like '2 or '
+                const moveData = axisMap[face];
+
+                if (!moveData) {
+                    console.warn("Unknown move face:", face, "in part:", part);
+                    continue;
+                }
+
+                let angle = angleMap[modifier] ?? angleMap[""]; // Get angle, default to normal if modifier unknown/empty
+                let repeat = 1;
+
+                if (modifier === '2') {
+                    angle = angleMap[""]; // Use the 90-degree angle
+                    repeat = 2;          // And repeat it twice
+                }
+
+
+                for (let i = 0; i < repeat; i++) {
+                    moves.push({
+                        axis: moveData.axis.clone(),
+                        layerIndex: moveData.layer,
+                        angle: angle
+                    });
+                 }
+            }
+            console.log("Parsed moves:", moves.length, moves);
+            return moves;
+        }
+
+
+        // --- Control Functions (applyMovesAnimated modified, solveCubeAnimated rewritten) ---
+        // Helper sleep function
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // applyMovesAnimated (Modified to include optional delay and better cleanup)
+        async function applyMovesAnimated(moves, isSolving = false) {
+            if (isSequenceAnimating) {
+                console.warn("Sequence already animating.");
+                return;
+            }
+            isSequenceAnimating = true;
+            stopSequenceRequested = false;
+            setButtonsEnabled(false); // Disable buttons during sequence
+            controls.enabled = false; // Disable orbit controls during sequence
+
+            const delay = isSolving ? SOLVE_DELAY : 0; // Use delay only for solving
+
+            // Show stop button logic depends on whether it was shuffle or solve
+            const startedByShuffle = shuffleButton.style.display === 'none' && stopButton.style.display === 'inline-block';
+            if (!startedByShuffle) { // If started by solve or manual moves (future)
+                stopButton.style.display = 'inline-block';
+                stopButton.disabled = false;
+            }
+
+
+            try {
+                console.log(`Starting sequence of ${moves.length} moves${isSolving ? ` with ${delay}ms delay` : ''}.`);
+                for (let i = 0; i < moves.length; i++) {
+                    const move = moves[i];
+                    if (stopSequenceRequested) {
+                        console.log("Animation sequence stopped by user.");
+                        break;
+                    }
+                    // console.log(`Applying move ${i+1}/${moves.length}: Axis[${move.axis.toArray().map(n=>n.toFixed(1))}], Layer ${move.layerIndex}, Angle ${(move.angle / Math.PI * 180).toFixed(0)}`);
+                    await rotateLayer(move.axis, move.layerIndex, move.angle);
+                    if (delay > 0 && i < moves.length - 1 && !stopSequenceRequested) { // Add delay if needed
+                        await sleep(delay);
+                    }
+                }
+            } catch (error) {
+                console.error("Error during move sequence:", error);
+            } finally {
+                isSequenceAnimating = false;
+                // Don't reset stopSequenceRequested here, let the stop button handler do it if needed
+                setButtonsEnabled(true); // Re-enable buttons
+                controls.enabled = true; // Re-enable orbit controls
+
+                // Hide stop button only if it wasn't stopped manually
+                if (!stopSequenceRequested) {
+                    stopButton.style.display = 'none';
+                    // Ensure shuffle button is visible again if it wasn't a shuffle that finished
+                    shuffleButton.style.display = 'inline-block';
+                } else {
+                     console.log("Sequence stopped, leaving Stop button visible (disabled).");
+                     // Keep stop button visible but disabled if stopped manually
+                     stopButton.disabled = true;
+                }
+                stopSequenceRequested = false; // Reset flag now
+
+
+                console.log("Move sequence finished or stopped.");
+            }
+        }
+
+
+        function setButtonsEnabled(enabled) {
+            solveButton.disabled = !enabled;
+            shuffleButton.disabled = !enabled;
+            settingsButton.disabled = !enabled;
+            // Stop button state managed separately by sequences and stop request
+        }
+
+        function showSolveConfirmation() {
+            if (isSequenceAnimating || isAnimating) return;
+            // Reset modal content for confirmation
+            modalTitle.textContent = "SOLVE CUBE?";
+            modalMessage.textContent = `This will attempt to solve the cube from its current state using an algorithm (${SOLVE_DELAY}ms delay per step). Proceed?`;
+            modalConfirmButton.textContent = "Solve!";
+            modalCancelButton.style.display = 'inline-block'; // Show cancel
+            modalConfirmButton.style.display = 'inline-block'; // Show confirm
+            modalConfirmButton.onclick = () => { // Ensure correct action
+                 hideSolveConfirmation();
+                 solveCubeAlgorithmically();
+            };
+            solveModal.classList.add('active');
+        }
+
+        function showSolverMessage(title, message, showCancel = false, showConfirm = false) {
+             modalTitle.textContent = title;
+             modalMessage.textContent = message;
+             modalCancelButton.style.display = showCancel ? 'inline-block' : 'none';
+             modalConfirmButton.style.display = showConfirm ? 'inline-block' : 'none';
+             if (showConfirm) { // Make confirm button just close the message modal
+                  modalConfirmButton.textContent = "OK";
+                  modalConfirmButton.onclick = hideSolveConfirmation;
+             }
+             solveModal.classList.add('active');
+        }
+
+        function hideSolveConfirmation() {
+            solveModal.classList.remove('active');
+        }
+
+        function requestStopSequence() {
+            if (isSequenceAnimating) {
+                stopSequenceRequested = true;
+                stopButton.disabled = true; // Prevent multiple clicks while processing stop
+                console.log("Stop requested...");
+            } else {
+                 // If not animating, just hide the button if it's somehow visible
+                 stopButton.style.display = 'none';
+            }
+        }
+
+        // --- NEW: Algorithmic Solver Function ---
+        async function solveCubeAlgorithmically() {
+            if (isAnimating || isSequenceAnimating) {
+                console.warn("Cannot solve: Animation already in progress.");
+                return;
+            }
+             // Ensure solver is available
+            if (typeof kociemba === 'undefined' || typeof kociemba.solve !== 'function') {
+                 showSolverMessage("Error", "Solver library (kociemba.js) is not available or initialized.", false, true);
+                 return;
+            }
+
+            console.log("Attempting to solve cube algorithmically...");
+            if(settingsPanel.classList.contains('active')) toggleSettingsPanel(); // Close settings
+
+            // 1. Get Cube State
+            showSolverMessage("Solving...", "Reading current cube state...", false, false); // Show status
+            await sleep(100); // Give UI time to update modal
+            const stateString = getCubeStateString();
+
+            if (!stateString) {
+                showSolverMessage("Error", "Failed to read cube state. Cannot solve. Check console for details.", false, true);
+                setButtonsEnabled(true); // Re-enable buttons
+                return;
+            }
+
+            // Check if already solved
+             const solvedString = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
+             if (stateString === solvedString) {
+                 showSolverMessage("Already Solved", "The cube is already in the solved state!", false, true);
+                 setButtonsEnabled(true); // Re-enable buttons
+                 return;
+             }
+
+
+            // 2. Solve using Kociemba library
+            try {
+                modalMessage.textContent = "Calculating solution..."; // Update status
+                await sleep(50);
+                console.log("Sending to solver:", stateString);
+                // Use a timeout for the solver in case it hangs
+                let solution = null;
+                const solverPromise = new Promise((resolve, reject) => {
+                     try {
+                        resolve(kociemba.solve(stateString));
+                     } catch (solverError) {
+                        reject(solverError);
+                     }
+                });
+                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Solver timed out after 10 seconds")), 10000));
+
+                solution = await Promise.race([solverPromise, timeoutPromise]);
+
+                console.log("Solver Result:", solution);
+
+                if (!solution || solution.trim() === "" || solution.toLowerCase().includes("error") || solution.includes("Invalid")) {
+                   // Handle specific Kociemba error messages if possible
+                   let errorMsg = `Could not find a solution. Solver message: ${solution || 'No solution found.'}`;
+                   if (solution && solution.includes("Error")) {
+                       // Extract error code if present e.g., "Error 1"
+                       errorMsg = `Solver Error: ${solution}. This might indicate an invalid cube state (e.g., twisted corner).`;
+                   }
+                   showSolverMessage("Solver Error", errorMsg, false, true);
+                   setButtonsEnabled(true);
+                   return;
+                }
+
+                // 3. Parse the solution moves
+                const moves = parseSolverMoves(solution);
+                modalMessage.textContent = `Solution found (${moves.length} steps/${solution.trim().split(/\s+/).length} notations). Animating...`;
+                await sleep(50);
+
+
+                if (moves.length === 0 && stateString !== solvedString) {
+                    showSolverMessage("Error", "Solver returned a solution, but parsing resulted in zero moves.", false, true);
+                     setButtonsEnabled(true);
+                     return;
+                }
+
+                 // Hide the modal before starting animation
+                 hideSolveConfirmation();
+
+                // 4. Animate the solution
+                await applyMovesAnimated(moves, true); // Pass true for 'isSolving' to enable delay
+
+            } catch (e) {
+                console.error("Error during solving process:", e);
+                 let userMessage = `An error occurred: ${e.message}. Check console for details.`;
+                 if (e.message.includes("timed out")) {
+                    userMessage = "The solver took too long to find a solution. The cube might be in a complex state or there was an issue."
+                 }
+                showSolverMessage("Solver Error", userMessage, false, true);
+                // Ensure proper cleanup even on error during solving phase
+                isSequenceAnimating = false;
+                stopSequenceRequested = false;
+                setButtonsEnabled(true);
+                controls.enabled = true;
+                stopButton.style.display = 'none';
+            }
+        }
+
+
+        // shuffleCubeAnimated (Unchanged - uses applyMovesAnimated without delay)
+        function shuffleCubeAnimated() {
+            if (isAnimating || isSequenceAnimating) return;
+            console.log("Shuffling Cube Animated...");
+            shuffleButton.style.display = 'none'; // Hide shuffle
+            stopButton.style.display = 'inline-block'; // Show stop
+            stopButton.disabled = false;
+            const moves = [];
+            const axes = [new THREE.Vector3(1,0,0), new THREE.Vector3(0,1,0), new THREE.Vector3(0,0,1)];
+            const angles = [Math.PI/2, -Math.PI/2];
+            let lastAxis = null;
+            for (let i = 0; i < SHUFFLE_MOVES; i++) {
+                let axis;
+                do { axis = axes[Math.floor(Math.random() * axes.length)]; } while(axis === lastAxis);
+                const layerIndex = Math.floor(Math.random() * N);
+                const angle = angles[Math.floor(Math.random() * angles.length)];
+                moves.push({ axis, layerIndex, angle });
+                lastAxis = axis;
+            }
+            // Call applyMovesAnimated without the 'isSolving' flag (or false)
+            applyMovesAnimated(moves, false);
+        }
+
+        // --- Animation Loop (Unchanged) ---
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update(); // Always update controls for damping etc.
+            renderer.render(scene, camera);
+        }
+
+        // --- Start ---
+        init();
+
+    </script>
+
+</body>
+</html>
