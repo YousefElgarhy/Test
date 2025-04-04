@@ -1,0 +1,1107 @@
+/* --- Variables --- */
+:root {
+    --font-primary: 'Roboto', sans-serif;
+    --font-heading: 'Montserrat', sans-serif;
+
+    /* Light Theme */
+    --bg-color-light: #f4f7f9;
+    --text-color-light: #333;
+    --panel-bg-color-light: #ffffff;
+    --header-bg-color-light: linear-gradient(135deg, #4a90e2, #3a7bc8);
+    --header-text-color-light: #ffffff;
+    --button-bg-color-light: #ffffff;
+    --button-text-color-light: #4a90e2;
+    --button-border-color-light: #d0d8e0;
+    --button-hover-bg-color-light: #f0f4f8;
+    --button-active-bg-color-light: #e8eef4;
+    --cube-bg-color-light: rgba(255, 255, 255, 0.65); /* Slightly more opaque */
+    --modal-bg-color-light: #ffffff;
+    --modal-header-color-light: #4a90e2; /* Standard blue header */
+    --modal-button-cancel-bg-light: #f0f4f8;
+    --modal-button-cancel-border-light: #d0d8e0;
+    --modal-button-confirm-bg-light: #4a90e2; /* Standard blue confirm */
+    --modal-button-confirm-text-light: #ffffff;
+    --settings-panel-bg-light: #ffffff;
+    --settings-separator-color-light: #e8eef4;
+    --slider-thumb-bg-light: #4a90e2;
+    --slider-track-bg-light: #d0d8e0;
+    --stop-button-bg-light: #e74c3c;
+    --stop-button-text-light: #ffffff;
+    --stop-button-border-light: #c0392b;
+    --stop-button-hover-bg-light: #ec7063;
+    --toggle-bg-on-light: #4a90e2;
+    --toggle-bg-off-light: #bdc3c7;
+    --shadow-color-light: rgba(0, 0, 0, 0.1);
+    --icon-color-light: #4a90e2;
+    --feedback-success-color-light: #2ecc71;
+    --feedback-error-color-light: #e74c3c;
+    --danger-color-light: #e74c3c; /* Red for danger actions */
+    --danger-hover-color-light: #c0392b; /* Darker red on hover */
+    --gold-color: #ffc107; /* Coin color */
+    --icon-color-rgb-light: 74, 144, 226; /* RGB for box-shadow */
+
+
+    /* Dark Theme */
+    --bg-color-dark: #2c3e50;
+    --text-color-dark: #ecf0f1;
+    --panel-bg-color-dark: #34495e;
+    --header-bg-color-dark: linear-gradient(135deg, #34495e, #2c3e50);
+    --header-text-color-dark: #ecf0f1;
+    --button-bg-color-dark: #4a6178;
+    --button-text-color-dark: #ecf0f1;
+    --button-border-color-dark: #5d7891;
+    --button-hover-bg-color-dark: #5d7891;
+    --button-active-bg-color-dark: #6e8aaa;
+    --cube-bg-color-dark: rgba(44, 62, 80, 0.7); /* Slightly more opaque */
+    --modal-bg-color-dark: #34495e;
+    --modal-header-color-dark: #5dade2; /* Standard blue header */
+    --modal-button-cancel-bg-dark: #4a6178;
+    --modal-button-cancel-border-dark: #5d7891;
+    --modal-button-confirm-bg-dark: #5dade2; /* Standard blue confirm */
+    --modal-button-confirm-text-dark: #ffffff;
+    --settings-panel-bg-dark: #2c3e50;
+    --settings-separator-color-dark: #4a6178;
+    --slider-thumb-bg-dark: #5dade2;
+    --slider-track-bg-dark: #4a6178;
+    --stop-button-bg-dark: #c0392b;
+    --stop-button-text-dark: #ffffff;
+    --stop-button-border-dark: #a93226;
+    --stop-button-hover-bg-dark: #e74c3c;
+    --toggle-bg-on-dark: #5dade2;
+    --toggle-bg-off-dark: #7f8c8d;
+    --shadow-color-dark: rgba(0, 0, 0, 0.3);
+    --icon-color-dark: #5dade2;
+    --feedback-success-color-dark: #27ae60;
+    --feedback-error-color-dark: #e74c3c;
+    --danger-color-dark: #c0392b; /* Red for danger actions */
+    --danger-hover-color-dark: #a93226; /* Darker red on hover */
+    --icon-color-rgb-dark: 93, 173, 226; /* RGB for box-shadow */
+
+    --transition-speed: 0.3s;
+}
+
+/* --- Base Styles & Theme Application --- */
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-primary);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden; /* Prevent body scrollbars */
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+/* --- Theme Variable Application --- */
+body { /* Light theme defaults */
+    --bg-color: var(--bg-color-light);
+    --text-color: var(--text-color-light);
+    --panel-bg-color: var(--panel-bg-color-light);
+    --header-bg-color: var(--header-bg-color-light);
+    --header-text-color: var(--header-text-color-light);
+    --button-bg-color: var(--button-bg-color-light);
+    --button-text-color: var(--button-text-color-light);
+    --button-border-color: var(--button-border-color-light);
+    --button-hover-bg-color: var(--button-hover-bg-color-light);
+    --button-active-bg-color: var(--button-active-bg-color-light);
+    --cube-bg-color: var(--cube-bg-color-light);
+    --modal-bg-color: var(--modal-bg-color-light);
+    --modal-header-color: var(--modal-header-color-light);
+    --modal-button-cancel-bg: var(--modal-button-cancel-bg-light);
+    --modal-button-cancel-border: var(--modal-button-cancel-border-light);
+    --modal-button-confirm-bg: var(--modal-button-confirm-bg-light);
+    --modal-button-confirm-text: var(--modal-button-confirm-text-light);
+    --settings-panel-bg: var(--settings-panel-bg-light);
+    --settings-separator-color: var(--settings-separator-color-light);
+    --slider-thumb-bg: var(--slider-thumb-bg-light);
+    --slider-track-bg: var(--slider-track-bg-light);
+    --stop-button-bg: var(--stop-button-bg-light);
+    --stop-button-text: var(--stop-button-text-light);
+    --stop-button-border: var(--stop-button-border-light);
+    --stop-button-hover-bg: var(--stop-button-hover-bg-light);
+    --toggle-bg-on: var(--toggle-bg-on-light);
+    --toggle-bg-off: var(--toggle-bg-off-light);
+    --shadow-color: var(--shadow-color-light);
+    --icon-color: var(--icon-color-light);
+    --feedback-success-color: var(--feedback-success-color-light);
+    --feedback-error-color: var(--feedback-error-color-light);
+    --danger-color: var(--danger-color-light);
+    --danger-hover-color: var(--danger-hover-color-light);
+    --icon-color-rgb: var(--icon-color-rgb-light);
+}
+
+body.dark-theme {
+    --bg-color: var(--bg-color-dark);
+    --text-color: var(--text-color-dark);
+    --panel-bg-color: var(--panel-bg-color-dark);
+    --header-bg-color: var(--header-bg-color-dark);
+    --header-text-color: var(--header-text-color-dark);
+    --button-bg-color: var(--button-bg-color-dark);
+    --button-text-color: var(--button-text-color-dark);
+    --button-border-color: var(--button-border-color-dark);
+    --button-hover-bg-color: var(--button-hover-bg-color-dark);
+    --button-active-bg-color: var(--button-active-bg-color-dark);
+    --cube-bg-color: var(--cube-bg-color-dark);
+    --modal-bg-color: var(--modal-bg-color-dark);
+    --modal-header-color: var(--modal-header-color-dark);
+    --modal-button-cancel-bg: var(--modal-button-cancel-bg-dark);
+    --modal-button-cancel-border: var(--modal-button-cancel-border-dark);
+    --modal-button-confirm-bg: var(--modal-button-confirm-bg-dark);
+    --modal-button-confirm-text: var(--modal-button-confirm-text-dark);
+    --settings-panel-bg: var(--settings-panel-bg-dark);
+    --settings-separator-color: var(--settings-separator-color-dark);
+    --slider-thumb-bg: var(--slider-thumb-bg-dark);
+    --slider-track-bg: var(--slider-track-bg-dark);
+    --stop-button-bg: var(--stop-button-bg-dark);
+    --stop-button-text: var(--stop-button-text-dark);
+    --stop-button-border: var(--stop-button-border-dark);
+    --stop-button-hover-bg: var(--stop-button-hover-bg-dark);
+    --toggle-bg-on: var(--toggle-bg-on-dark);
+    --toggle-bg-off: var(--toggle-bg-off-dark);
+    --shadow-color: var(--shadow-color-dark);
+    --icon-color: var(--icon-color-dark);
+    --feedback-success-color: var(--feedback-success-color-dark);
+    --feedback-error-color: var(--feedback-error-color-dark);
+    --danger-color: var(--danger-color-dark);
+    --danger-hover-color: var(--danger-hover-color-dark);
+    --icon-color-rgb: var(--icon-color-rgb-dark);
+}
+
+/* --- Initial Hide --- */
+/* Hide main content until JS adds 'user-set' class after username entry */
+body:not(.user-set) #header,
+body:not(.user-set) main,
+body:not(.user-set) #settings-panel {
+    display: none;
+}
+/* Ensure username modal is visible initially */
+body:not(.user-set) #username-modal {
+    display: flex; /* Override default display: none */
+    opacity: 1; /* Make it visible immediately */
+}
+body:not(.user-set) #username-modal .modal-content {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+
+/* --- Header --- */
+#header {
+    width: 100%;
+    padding: 10px 20px; /* Padding left/right */
+    background: var(--header-bg-color);
+    color: var(--header-text-color);
+    box-shadow: 0 3px 6px var(--shadow-color);
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between; /* User info left, controls right/center */
+    align-items: center;
+    transition: background var(--transition-speed) ease;
+    position: relative;
+    z-index: 10;
+}
+
+#user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+#coin-balance-display {
+    display: inline-flex; /* Use inline-flex */
+    align-items: center;
+    gap: 6px;
+    background-color: rgba(255, 255, 255, 0.15);
+    padding: 5px 12px;
+    border-radius: 15px;
+    cursor: default;
+    transition: transform 0.2s ease-out, background-color 0.2s;
+    font-size: 0.9rem; /* Slightly smaller */
+}
+body.dark-theme #coin-balance-display {
+     background-color: rgba(0, 0, 0, 0.25);
+}
+
+.coin-icon.gold {
+    color: var(--gold-color);
+    font-size: 1.1em;
+    line-height: 1; /* Prevent extra space */
+}
+
+#controls {
+    display: flex;
+    gap: 10px; /* Slightly reduced gap */
+    align-items: center;
+    justify-content: flex-end; /* Align controls towards the right */
+    flex-grow: 1; /* Allow controls to take up space */
+    padding-left: 15px; /* Add space between user info and controls */
+}
+
+#controls button {
+    padding: 7px 13px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--font-primary);
+    cursor: pointer;
+    background-color: var(--button-bg-color);
+    color: var(--button-text-color);
+    border: 1px solid var(--button-border-color);
+    border-radius: 6px;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease, transform 0.15s ease-out, box-shadow 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    line-height: 1;
+    white-space: nowrap; /* Prevent button text wrapping */
+}
+
+#controls button i {
+    font-size: 1.1em;
+    line-height: 1;
+}
+
+#controls button:hover:not(:disabled) { /* Add :not(:disabled) */
+    transform: translateY(-2px);
+    background-color: var(--button-hover-bg-color);
+    box-shadow: 0 3px 5px rgba(0,0,0,0.08);
+}
+
+#controls button:active:not(:disabled) { /* Add :not(:disabled) */
+    transform: translateY(0px);
+    background-color: var(--button-active-bg-color);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+#controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--button-hover-bg-color); /* Consistent look */
+    color: var(--button-text-color);
+    transform: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+body.dark-theme #controls button:disabled {
+    background-color: var(--button-bg-color-dark);
+    opacity: 0.4;
+}
+
+#stop-button {
+    background-color: var(--stop-button-bg);
+    color: var(--stop-button-text) !important; /* Ensure text stays white */
+    border-color: var(--stop-button-border);
+}
+body.dark-theme #stop-button {
+     color: var(--stop-button-text) !important;
+}
+
+#stop-button:hover:not(:disabled) {
+    background-color: var(--stop-button-hover-bg);
+    border-color: var(--stop-button-border);
+}
+
+#logo-area {
+    display: flex;
+    align-items: center;
+    margin: 0 10px; /* Spacing around logo */
+    color: var(--header-text-color);
+    /* order: -1; */ /* Position logo relative to other controls if needed */
+}
+
+.logo-icon {
+    font-size: 1.5rem;
+    margin-right: 6px;
+    opacity: 0.9;
+}
+
+.logo-text {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+}
+
+/* Coin Animation */
+#coin-animation-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1002; /* Above modals */
+    overflow: hidden;
+}
+
+.coin-fall {
+    position: absolute;
+    color: var(--gold-color); /* Use gold color */
+    font-size: 1.6rem; /* Adjust size as needed */
+    opacity: 1;
+    display: flex; /* Align icon and text */
+    align-items: center;
+    gap: 5px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3); /* Add shadow for visibility */
+    animation: coinFallAnimation 1.3s cubic-bezier(0.3, 0, 0.8, 1) forwards; /* Adjusted timing/easing */
+}
+.coin-fall span {
+    font-size: 0.8em;
+    font-weight: bold;
+    color: var(--header-text-color); /* Match header text color */
+    -webkit-text-stroke: 0.5px var(--gold-color); /* Outline effect */
+    paint-order: stroke fill;
+}
+
+
+@keyframes coinFallAnimation {
+    0% {
+        transform: translate(-50%, -50%) scale(0.6);
+        opacity: 0;
+    }
+    20% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    /* Optional pause/hover effect */
+    /* 50% {
+         transform: translate(-50%, -50% + 80px) scale(1.1) rotate(15deg);
+         opacity: 1;
+    } */
+    100% {
+        /* Fall towards the coin balance display area */
+        transform: translate(-50%, -50% + 300px) scale(0.2) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+
+/* --- Main Content --- */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 0 15px;
+    flex-grow: 1; /* Allow main to take up remaining height */
+    justify-content: center; /* Center content vertically if space allows */
+}
+
+#cube-container {
+    width: 90vw;
+    max-width: 550px;
+    height: 60vh; /* Relative height */
+    min-height: 300px; /* Minimum sensible height */
+    max-height: 480px; /* Maximum sensible height */
+    background-color: var(--cube-bg-color);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px var(--shadow-color);
+    margin-bottom: 15px;
+    position: relative;
+    touch-action: none; /* Prevent default touch actions like scroll */
+    transition: background-color var(--transition-speed) ease;
+    border: 1px solid var(--button-border-color);
+    overflow: hidden; /* Clip the canvas */
+    cursor: grab; /* Indicate draggable */
+}
+#cube-container:active {
+    cursor: grabbing; /* Indicate dragging */
+}
+#cube-container canvas {
+     display: block; /* Remove extra space below canvas */
+}
+
+
+#description {
+    max-width: 550px;
+    width: 90vw;
+    padding: 12px 18px;
+    background-color: var(--panel-bg-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 6px var(--shadow-color);
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.5;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    border: 1px solid var(--button-border-color);
+}
+
+#description strong {
+    color: var(--icon-color);
+    font-weight: 600;
+}
+
+/* --- Modals (General) --- */
+.modal-overlay {
+    display: none; /* Hidden by default, shown by JS via .active */
+    position: fixed;
+    inset: 0; /* top, right, bottom, left = 0 */
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.65);
+    display: flex; /* Use flex for centering */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.25s ease-in-out;
+}
+
+.modal-overlay.active {
+    display: flex; /* Needed to override initial 'none' */
+    opacity: 1;
+}
+
+.modal-content {
+    background-color: var(--modal-bg-color);
+    color: var(--text-color);
+    padding: 25px 35px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    transform: scale(0.95) translateY(10px);
+    opacity: 0;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, transform 0.25s ease-out, opacity 0.25s ease-out;
+    max-width: 420px;
+    width: 90%;
+    border: 1px solid var(--button-border-color);
+    position: relative; /* For absolute positioning of close button */
+}
+
+.modal-overlay.active .modal-content {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: var(--modal-header-color);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.modal-content h3.danger-text { /* Style danger H3 specifically */
+    color: var(--danger-color) !important; /* Important to override default */
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* General style for buttons inside modals or forms needing similar look */
+.modal-buttons button,
+#username-form button {
+    padding: 10px 25px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--font-primary);
+    transition: background-color 0.2s, transform 0.15s ease-out, box-shadow 0.2s ease;
+    border: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+}
+.modal-buttons button:hover:not(:disabled),
+#username-form button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+}
+.modal-buttons button:active:not(:disabled),
+#username-form button:active:not(:disabled) {
+    transform: translateY(0px);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
+}
+
+/* Specific Modal Buttons */
+#modal-cancel-solve,
+#modal-cancel-reset {
+    background-color: var(--modal-button-cancel-bg);
+    color: var(--text-color);
+    border: 1px solid var(--modal-button-cancel-border);
+}
+#modal-confirm-solve,
+#username-submit { /* Username submit uses confirm style */
+    background-color: var(--modal-button-confirm-bg);
+    color: var(--modal-button-confirm-text);
+    border: none;
+}
+
+/* Danger Button Styling */
+.danger-button {
+    background-color: var(--danger-color);
+    color: #ffffff !important; /* Ensure text is white */
+    border: none;
+}
+.danger-button:hover:not(:disabled) {
+    background-color: var(--danger-hover-color);
+}
+
+/* Disabled State for Modal/Form Buttons */
+.modal-buttons button:disabled,
+#username-form button:disabled {
+    background-color: var(--button-hover-bg-color); /* Use a neutral disabled bg */
+    color: var(--text-color); /* Use standard text color */
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    border: 1px solid var(--button-border-color); /* Add border for definition */
+}
+body.dark-theme .modal-buttons button:disabled,
+body.dark-theme #username-form button:disabled {
+    background-color: var(--button-bg-color-dark);
+    border-color: var(--button-border-color-dark);
+    opacity: 0.5;
+}
+/* Ensure danger button keeps red text color when disabled? Optional. */
+/* button.danger-button:disabled { color: var(--danger-color) !important; opacity: 0.5; } */
+
+
+/* Generic Close Button for Modals/Panels */
+.close-modal-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 5px;
+    opacity: 0.6;
+    transition: opacity 0.2s, transform 0.25s ease-out;
+    z-index: 1; /* Above content */
+}
+.close-modal-button:hover {
+    opacity: 1;
+    transform: rotate(90deg) scale(1.1);
+}
+
+/* --- Specific Modal Styles --- */
+
+/* Username Modal */
+#username-form input[type="text"] {
+    display: block;
+    width: 90%; /* Relative width */
+    max-width: 300px; /* Max width */
+    margin: 0 auto 10px auto;
+    padding: 10px 12px;
+    border: 1px solid var(--button-border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: var(--bg-color); /* Use body bg */
+    color: var(--text-color);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    text-align: center;
+}
+#username-form input[type="text"]:focus {
+    outline: none;
+    border-color: var(--icon-color);
+    box-shadow: 0 0 0 3px rgba(var(--icon-color-rgb), 0.3);
+}
+.error-message {
+    color: var(--feedback-error-color);
+    font-size: 0.85rem;
+    margin-top: -5px; /* Pull up slightly */
+    margin-bottom: 10px;
+    min-height: 1.2em; /* Reserve space even when empty */
+    display: block;
+    font-weight: 500;
+}
+
+/* Store Modal */
+.store-content {
+    max-width: 650px; /* Wider modal */
+    padding-bottom: 20px; /* Space below grid */
+}
+#store-items-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); /* Responsive grid */
+    gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    max-height: 60vh; /* Limit height */
+    overflow-y: auto; /* Allow scrolling */
+    padding: 10px; /* Inner padding */
+    border-radius: 6px;
+    background-color: rgba(0,0,0,0.03); /* Subtle background for scroll area */
+}
+body.dark-theme #store-items-container {
+    background-color: rgba(0,0,0,0.1);
+}
+
+.store-item {
+    background-color: var(--panel-bg-color);
+    border: 1px solid var(--settings-separator-color);
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+.store-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.store-item-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: var(--icon-color);
+}
+
+.store-item-icon {
+    font-size: 2.8rem; /* Larger icon */
+    margin: 15px 0;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.store-item-price {
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    min-height: 1.2em; /* Reserve space */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    opacity: 0.8; /* Slightly faded */
+}
+
+.store-item-buttons {
+    margin-top: auto; /* Push buttons to bottom */
+    display: flex;
+    flex-direction: column; /* Stack buttons/text */
+    gap: 5px; /* Space between elements */
+}
+.store-item-buttons button {
+    width: 100%;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+}
+.store-item-buttons .purchased-text {
+    font-size: 0.9rem;
+    color: var(--feedback-success-color);
+    font-weight: 500;
+    margin-bottom: 0; /* Removed bottom margin */
+}
+.store-item-buttons .purchased-text i {
+    margin-right: 4px;
+}
+/* Use Button */
+.store-item-buttons .use-button {
+    background-color: var(--modal-button-confirm-bg);
+    color: var(--modal-button-confirm-text);
+    border: none;
+}
+/* Use Button Disabled (when current) */
+.store-item-buttons .use-button:disabled {
+    background-color: var(--modal-button-cancel-bg); /* Use cancel style */
+    color: var(--text-color);
+    border: 1px solid var(--modal-button-cancel-border);
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+/* Purchase Button (re-uses default modal button style) */
+/* Purchase Button Disabled (insufficient funds) */
+.store-item-buttons .purchase-button:disabled {
+    /* Uses standard disabled button style defined earlier */
+    opacity: 0.5;
+}
+
+/* General Feedback Message Styling (used in Store and potentially elsewhere) */
+.feedback-message {
+    margin-top: 15px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    min-height: 1.2em; /* Reserve space */
+    padding: 8px 15px;
+    border-radius: 6px;
+    display: none; /* Hidden by default, shown by JS */
+}
+.feedback-message.success {
+    color: var(--feedback-success-color);
+    background-color: rgba(var(--feedback-success-color-rgb, 46, 204, 113), 0.1); /* Subtle bg */
+    border: 1px solid rgba(var(--feedback-success-color-rgb, 46, 204, 113), 0.3);
+    display: block;
+}
+.feedback-message.error {
+    color: var(--feedback-error-color);
+     background-color: rgba(var(--feedback-error-color-rgb, 231, 76, 60), 0.1); /* Subtle bg */
+    border: 1px solid rgba(var(--feedback-error-color-rgb, 231, 76, 60), 0.3);
+    display: block;
+}
+/* Add RGB versions for feedback colors */
+:root {
+    --feedback-success-color-rgb-light: 46, 204, 113;
+    --feedback-error-color-rgb-light: 231, 76, 60;
+    --feedback-success-color-rgb-dark: 39, 174, 96;
+    --feedback-error-color-rgb-dark: 231, 76, 60;
+}
+body {
+    --feedback-success-color-rgb: var(--feedback-success-color-rgb-light);
+    --feedback-error-color-rgb: var(--feedback-error-color-rgb-light);
+}
+body.dark-theme {
+    --feedback-success-color-rgb: var(--feedback-success-color-rgb-dark);
+    --feedback-error-color-rgb: var(--feedback-error-color-rgb-dark);
+}
+
+
+/* --- Settings Panel --- */
+#settings-panel {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: -320px; /* Start off-screen */
+    width: 300px;
+    height: 100%;
+    background-color: var(--settings-panel-bg);
+    box-shadow: -5px 0 20px var(--shadow-color);
+    z-index: 1001; /* Below coin animation, above overlay */
+    padding: 25px;
+    padding-top: 60px; /* Space for close button */
+    transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1), background-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    color: var(--text-color);
+    border-left: 1px solid var(--settings-separator-color);
+    overflow-y: auto; /* Allow scrolling if content overflows */
+}
+
+#settings-panel.active {
+    transform: translateX(-320px);
+}
+
+#settings-panel h2 {
+    margin-top: 0;
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 1.3rem;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.settings-section {
+    margin-bottom: 25px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid var(--settings-separator-color);
+    transition: border-color var(--transition-speed) ease;
+}
+/* Remove border/padding from last section before footer */
+.settings-section:has(+ .settings-footer) {
+     border-bottom: none;
+     padding-bottom: 0;
+     margin-bottom: 0;
+}
+
+.settings-section label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+#close-settings-button { /* Uses .close-modal-button style */
+    top: 15px;
+    right: 15px;
+}
+
+#animation-speed-slider {
+    width: 100%;
+    cursor: pointer;
+    accent-color: var(--slider-thumb-bg);
+    height: 6px;
+    background: var(--slider-track-bg);
+    border-radius: 3px;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+}
+#animation-speed-slider::-webkit-slider-runnable-track {
+    height: 6px;
+    background: var(--slider-track-bg);
+    border-radius: 3px;
+}
+#animation-speed-slider::-moz-range-track {
+    height: 6px;
+    background: var(--slider-track-bg);
+    border-radius: 3px;
+}
+#animation-speed-slider::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    margin-top: -7px; /* Center thumb */
+    height: 20px;
+    width: 20px;
+    background: var(--slider-thumb-bg);
+    border-radius: 50%;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    cursor: grab;
+}
+#animation-speed-slider::-moz-range-thumb {
+    height: 20px;
+    width: 20px;
+    background: var(--slider-thumb-bg);
+    border-radius: 50%;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    cursor: grab;
+}
+#animation-speed-slider:active::-webkit-slider-thumb { cursor: grabbing; }
+#animation-speed-slider:active::-moz-range-thumb { cursor: grabbing; }
+
+#speed-value-display {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    font-weight: 400;
+}
+
+.theme-options {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+.theme-options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0;
+    cursor: pointer;
+    font-weight: 400;
+    font-size: 0.95rem;
+}
+.theme-options input[type="radio"] {
+    margin-right: 0;
+    cursor: pointer;
+    accent-color: var(--icon-color);
+    width: 16px;
+    height: 16px;
+}
+.theme-options i {
+    color: var(--icon-color);
+    font-size: 1.1em;
+}
+
+.toggle-switch {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0; /* Remove padding if it has border */
+}
+.toggle-switch label:first-of-type {
+    margin-bottom: 0; /* Remove margin from text label */
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 26px;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0; /* T R B L = 0 */
+    background-color: var(--toggle-bg-off);
+    transition: .3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border-radius: 26px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+input:checked + .slider { background-color: var(--toggle-bg-on); }
+input:checked + .slider:before { transform: translateX(22px); }
+
+.full-width {
+    width: 100%;
+    padding: 9px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.small-info-text {
+    font-size: 0.8em;
+    opacity: 0.7;
+    margin-top: 8px;
+    text-align: center;
+    line-height: 1.3; /* Adjust line height */
+}
+
+.settings-footer {
+    margin-top: auto; /* Push to bottom */
+    padding-top: 25px; /* Space above footer */
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-color);
+    opacity: 0.7;
+    border-top: 1px solid var(--settings-separator-color);
+}
+
+/* --- Responsiveness --- */
+@media (max-width: 768px) {
+    #header {
+        flex-direction: column; /* Stack header items */
+        gap: 10px;
+        padding: 10px 15px;
+    }
+    #user-info {
+        order: -1; /* User info first */
+        width: 100%;
+        justify-content: space-between;
+        font-size: 0.9rem;
+    }
+    #controls {
+        order: 0; /* Controls second */
+        width: 100%;
+        justify-content: center; /* Center controls */
+        flex-wrap: wrap;
+        gap: 8px;
+        padding-left: 0; /* Remove padding override */
+    }
+    #controls button {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+    #logo-area {
+        order: -1; /* Move logo left within controls row */
+        margin: 0 5px 0 0;
+    }
+    #main {
+         justify-content: flex-start; /* Don't force vertical center */
+         padding-top: 10px;
+    }
+    #cube-container {
+        max-width: 90vw;
+        height: 55vh;
+        max-height: 400px;
+    }
+    #description {
+         max-width: 90vw;
+         font-size: 13px;
+    }
+    .modal-content {
+        padding: 20px 25px;
+        max-width: 90vw; /* Ensure modal fits screen */
+    }
+    #settings-panel {
+        width: 280px;
+        right: -300px; /* Adjust based on width + potential scrollbar */
+    }
+    #settings-panel.active {
+        transform: translateX(-280px);
+    }
+    #store-items-container {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    #header {
+        padding: 8px 10px;
+        gap: 8px;
+    }
+     #controls {
+        gap: 6px;
+    }
+    #controls button {
+        padding: 5px 8px;
+        font-size: 12px;
+        gap: 4px;
+    }
+     #controls button i {
+        font-size: 1em;
+    }
+    #user-info {
+        font-size: 0.85rem;
+        gap: 10px;
+    }
+     #coin-balance-display {
+         padding: 4px 10px;
+         font-size: 0.8rem;
+     }
+     .logo-text { font-size: 1.1rem; }
+     .logo-icon { font-size: 1.3rem; }
+
+    #cube-container {
+        height: 50vh;
+        max-height: 350px;
+        min-height: 250px;
+        margin-bottom: 10px;
+    }
+    #description {
+        padding: 10px 12px;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+    .modal-content {
+        padding: 15px 20px;
+    }
+     .modal-content h3 { font-size: 1.15rem; }
+     .modal-content p { font-size: 0.9rem; }
+     .modal-buttons button, #username-form button {
+        padding: 8px 18px;
+        font-size: 13px;
+    }
+    #store-items-container {
+        grid-template-columns: 1fr; /* Single column */
+        gap: 15px;
+    }
+     #settings-panel {
+        width: 250px;
+        right: -270px;
+    }
+     #settings-panel.active {
+        transform: translateX(-250px);
+    }
+     .store-item-icon { font-size: 2.5rem; }
+}

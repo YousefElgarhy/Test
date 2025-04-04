@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GeoDash Clone - Enhanced</title>
+    <style>
+        /* Font */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap'); /* Example sci-fi font */
+
+        /* Basic Reset & Body */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #12121f; /* Darker background */
+            font-family: 'Orbitron', sans-serif; /* Apply sci-fi font */
+            color: #e8e8e8;
+            overflow: hidden;
+        }
+
+        /* Game Container - Add Perspective */
+        #gameContainer {
+            width: 800px;
+            height: 350px;
+            border: 3px solid #2a2a72;
+            background: linear-gradient(135deg, #16213e, #0f3460, #1a1a2e, #0f3460);
+            background-size: 400% 400%;
+            animation: backgroundGradient 20s ease infinite;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            box-shadow: 0 0 25px rgba(42, 42, 114, 0.6);
+            perspective: 800px; /* Enable 3D transforms for children */
+        }
+
+        /* Player (Pseudo-3D Cube) */
+        #player {
+            width: 40px;
+            height: 40px;
+            /* Gradient for base color + subtle texture */
+             background-image:
+                /* Texture Overlay (subtle lines) */
+                linear-gradient(45deg, rgba(255, 255, 255, 0.08) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.08) 75%, rgba(255, 255, 255, 0.08)),
+                /* Base Color Gradient */
+                linear-gradient(150deg, #ff8c00, #f56217); /* Vibrant orange */
+            background-size: 8px 8px, 100% 100%; /* Texture size, base size */
+            border: 1px solid #ffae42; /* Lighter orange border */
+            border-radius: 4px;
+            position: absolute;
+            bottom: 5px;
+            left: 60px;
+            z-index: 10;
+            box-shadow: 0 0 18px rgba(255, 140, 0, 0.7); /* Orange glow */
+            /* Pseudo-3D Transform - keep Z minimal */
+            transform-style: preserve-3d;
+            transform: rotateY(-15deg) rotateX(5deg); /* Slight angle */
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Player 'jump' visual */
+        #player.jump-visual {
+             /* More dramatic rotation on jump */
+             transform: rotateY(-25deg) rotateX(-5deg) rotateZ(90deg) scale(0.9);
+        }
+
+        /* Obstacles */
+        .obstacle {
+            position: absolute;
+            bottom: 5px;
+            right: -50px;
+            z-index: 9;
+            border-radius: 3px;
+             /* Apply consistent perspective */
+             transform-style: preserve-3d;
+             transform: rotateY(-15deg); /* Match player's base angle */
+        }
+
+        /* Standard Block Obstacle - Pseudo-3D */
+        .obstacle-block {
+            width: 40px;
+            height: 40px;
+             /* Gradient simulating light source */
+             background: linear-gradient(145deg, #ff5e78, #d6304d); /* Vivid pink/red */
+             border-top: 1px solid #ff7a90; /* Lighter top edge */
+             border-left: 1px solid #ff7a90; /* Lighter left edge */
+             border-bottom: 1px solid #b8203a; /* Darker bottom edge */
+             border-right: 1px solid #b8203a; /* Darker right edge */
+             box-shadow: 0 0 12px rgba(255, 94, 120, 0.6);
+        }
+
+        /* Taller Block Obstacle - Pseudo-3D */
+        .obstacle-tall {
+            width: 40px;
+            height: 70px;
+             /* Similar gradient effect */
+             background: linear-gradient(160deg, #21d4fd, #1b90ff); /* Bright blue */
+             border-top: 1px solid #5ae0ff;
+             border-left: 1px solid #5ae0ff;
+             border-bottom: 1px solid #136ecf;
+             border-right: 1px solid #136ecf;
+             box-shadow: 0 0 12px rgba(33, 212, 253, 0.6);
+        }
+
+         /* Spike Obstacle - Cleaner look */
+         .obstacle-spike {
+             width: 40px;
+             height: 40px;
+             background: transparent;
+             border: none; /* Remove standard border */
+             position: relative; /* Needed for pseudo-element */
+             transform-origin: bottom center;
+         }
+         /* Use pseudo-element for the spike shape with gradient */
+         .obstacle-spike::before {
+             content: '';
+             position: absolute;
+             bottom: 0;
+             left: 0;
+             width: 0;
+             height: 0;
+             border-left: 20px solid transparent;
+             border-right: 20px solid transparent;
+              /* Gradient for spike color */
+             border-bottom: 40px solid;
+             border-image-slice: 1;
+             border-image-source: linear-gradient(to top, #be93fd, #9146ff); /* Purple gradient */
+             filter: drop-shadow(0 3px 6px rgba(145, 70, 255, 0.6));
+         }
+
+
+        /* Score Display */
+        #score {
+            position: absolute;
+            top: 15px;
+            right: 15px; /* Moved to top right */
+            font-size: 30px;
+            font-weight: 700; /* Bold Orbitron */
+            z-index: 20;
+            color: #f0f0f0;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Start/Game Over Message */
+        #message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 34px;
+            font-weight: 700;
+            text-align: center;
+            background-color: rgba(10, 10, 20, 0.85);
+            padding: 30px 45px;
+            border-radius: 12px;
+            z-index: 30;
+            display: block;
+            text-shadow: 3px 3px 6px black;
+             line-height: 1.5;
+             border: 2px solid rgba(118, 75, 162, 0.5); /* Purpleish border */
+             box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Ground Line */
+        #ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            /* Enhanced gradient */
+             background: linear-gradient(90deg, #4a4a8f, #2a2a72, #1a1a5e);
+             box-shadow: 0 -3px 8px rgba(74, 74, 143, 0.7);
+            z-index: 11;
+        }
+
+        /* Background Animation */
+        @keyframes backgroundGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+         /* Game Over Screen Shake */
+         @keyframes screenShake {
+             /* Same shake animation */
+             0% { transform: translate(0, 0); } 10% { transform: translate(-3px, 2px); } 20% { transform: translate(3px, -2px); } 30% { transform: translate(-3px, -2px); } 40% { transform: translate(3px, 2px); } 50% { transform: translate(-3px, 2px); } 60% { transform: translate(3px, -2px); } 70% { transform: translate(-3px, -2px); } 80% { transform: translate(3px, 2px); } 90% { transform: translate(-3px, 2px); } 100% { transform: translate(0, 0); }
+         }
+
+         .shake {
+             animation: screenShake 0.3s linear;
+         }
+
+    </style>
+</head>
+<body>
+
+    <div id="gameContainer">
+        <div id="score">Score: 0</div>
+        <div id="player"></div>
+        <div id="ground"></div>
+        <div id="message">Click or Press Space to Start</div>
+        <!-- Obstacles will be added here by JavaScript -->
+    </div>
+
+    <script>
+        // --- DOM Elements ---
+        const gameContainer = document.getElementById('gameContainer');
+        const player = document.getElementById('player');
+        const scoreDisplay = document.getElementById('score');
+        const message = document.getElementById('message');
+        const ground = document.getElementById('ground');
+
+        // --- Game Configuration ---
+        const gameWidth = gameContainer.offsetWidth;
+        const gameHeight = gameContainer.offsetHeight;
+        const playerWidth = 40; // Use fixed size matching CSS
+        const playerHeight = 40;
+        const playerInitialX = 60;
+        const groundHeight = ground.offsetHeight;
+
+        // --- Physics & Gameplay ---
+        const gravity = 0.7; // Keep gravity reasonable
+        const jumpForce = 14.5; // Adjusted slightly if needed
+        const baseGameSpeed = 4.5; // ** SLOWER CUBE **
+        const acceleration = 0.0015; // ** SLOWER ACCELERATION **
+        const maxGameSpeed = 12; // Reduced max speed
+        let playerVelocityY = 0;
+        let playerPositionY = groundHeight;
+        let isJumping = false;
+        let gameSpeed = baseGameSpeed;
+        let score = 0;
+        let isGameOver = true;
+        let gameLoopId = null;
+        let minObstacleGap = 280; // ** INCREASED GAP slightly for slower speed **
+        let maxObstacleGap = 550; // ** INCREASED GAP slightly for slower speed **
+        let nextObstacleSpawnX = gameWidth; // Threshold X coordinate for next spawn
+
+        // --- Obstacle Management ---
+        let obstacles = [];
+
+        // --- Functions ---
+
+        function updateScore() {
+            scoreDisplay.textContent = `Score: ${score}`;
+        }
+
+        function showMessage(text) {
+            message.innerHTML = text.replace(/\n/g, '<br>'); // Use regex for global replace
+            message.style.display = 'block';
+        }
+
+        function hideMessage() {
+            message.style.display = 'none';
+        }
+
+        function playerJump() {
+            if (playerPositionY <= groundHeight + 5 && !isGameOver) { // Allow jump near ground
+                playerVelocityY = jumpForce;
+                // isJumping flag isn't strictly necessary due to position check, but good practice
+                isJumping = true;
+                player.classList.add('jump-visual');
+                setTimeout(() => player.classList.remove('jump-visual'), 150);
+            }
+        }
+
+        function updatePlayerPosition() {
+            playerVelocityY -= gravity;
+            playerPositionY += playerVelocityY;
+
+            if (playerPositionY <= groundHeight) {
+                playerPositionY = groundHeight;
+                playerVelocityY = 0;
+                isJumping = false;
+            }
+
+             // Apply visual position (relative to ground element's top edge)
+             // Player's bottom should be at playerPositionY - groundHeight
+            player.style.bottom = `${playerPositionY - groundHeight}px`;
+        }
+
+        function spawnObstacle() {
+            const obstacle = document.createElement('div');
+            obstacle.classList.add('obstacle');
+
+            const typeRoll = Math.random();
+            let obstacleHeight = 40;
+            let obstacleWidth = 40; // Standard width
+
+            if (typeRoll < 0.4) {
+                obstacle.classList.add('obstacle-block');
+                obstacleHeight = 40;
+            } else if (typeRoll < 0.75) {
+                 obstacle.classList.add('obstacle-tall');
+                 obstacleHeight = 70;
+            } else {
+                obstacle.classList.add('obstacle-spike');
+                // Collision box is still effectively a 40x40 block at the base
+                obstacleHeight = 40; // Use base height for collision
+            }
+
+            obstacle.style.height = `${obstacleHeight}px`; // Visual height
+             // Use fixed width for consistency unless designing different width obstacles
+            obstacle.style.width = `${obstacleWidth}px`;
+            obstacle.style.bottom = `${groundHeight}px`;
+            obstacle.style.left = `${gameWidth}px`;
+            obstacle.dataset.scored = 'false';
+            obstacle.dataset.width = obstacleWidth;
+            // Store the *collision* height, which might differ from visual for spikes
+            obstacle.dataset.height = (obstacle.classList.contains('obstacle-spike')) ? 40 : obstacleHeight;
+
+            gameContainer.appendChild(obstacle);
+            obstacles.push(obstacle);
+
+             // *** Important: Calculate the threshold for the *next* spawn ***
+             // This threshold determines where the *current* obstacle needs to reach
+             // before the next one is allowed to spawn.
+             const gap = Math.random() * (maxObstacleGap - minObstacleGap) + minObstacleGap;
+             // nextObstacleSpawnX is the point the *right edge* of this new obstacle
+             // should pass to trigger the *next* spawn.
+             nextObstacleSpawnX = gameWidth - gap;
+              // console.log(`Spawned. Next threshold set to: ${nextObstacleSpawnX.toFixed(2)}`);
+        }
+
+
+        function moveObstacles() {
+             let shouldSpawnNext = false;
+
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obs = obstacles[i];
+                let obsLeft = parseFloat(obs.style.left);
+                obsLeft -= gameSpeed;
+                obs.style.left = `${obsLeft}px`;
+
+                const obsWidth = parseFloat(obs.dataset.width);
+
+                // Off-screen check
+                if (obsLeft + obsWidth < 0) {
+                    obs.remove();
+                    obstacles.splice(i, 1);
+                    continue; // Skip rest of loop for this removed obstacle
+                }
+
+                // Scoring check
+                const playerRightEdge = playerInitialX + playerWidth;
+                 if (obsLeft + obsWidth < playerRightEdge && obs.dataset.scored === 'false') {
+                     score++;
+                     obs.dataset.scored = 'true';
+                     updateScore();
+                    if (gameSpeed < maxGameSpeed) {
+                        gameSpeed += acceleration * 5; // Slight boost on score
+                        gameSpeed = Math.min(gameSpeed, maxGameSpeed);
+                    }
+                 }
+
+                 // *** Spawn Trigger Check - Check the LAST obstacle added ***
+                 // If this is the most recently added obstacle (highest index)
+                 // AND its right edge has passed the trigger threshold `nextObstacleSpawnX`
+                 if (i === obstacles.length - 1 && obsLeft + obsWidth < nextObstacleSpawnX) {
+                      // console.log(`Obstacle ${i} passed threshold (${(obsLeft + obsWidth).toFixed(2)} < ${nextObstacleSpawnX.toFixed(2)}). Flagging spawn.`);
+                     shouldSpawnNext = true;
+                 }
+            }
+
+            // Spawn next obstacle if conditions met and not too many obstacles
+             // Check shouldSpawnNext flag *after* iterating through all obstacles
+            if (shouldSpawnNext && obstacles.length < 8) { // Limit on-screen obstacles
+                // console.log("Condition met, calling spawnObstacle().");
+                spawnObstacle();
+            }
+        }
+
+
+        function checkCollision() {
+             // Use fixed player dimensions from config
+             const playerBottom = playerPositionY;
+             const playerTop = playerBottom + playerHeight;
+
+            const playerRect = {
+                left: playerInitialX,
+                right: playerInitialX + playerWidth,
+                bottom: playerBottom,
+                top: playerBottom + playerHeight
+            };
+
+            for (const obs of obstacles) {
+                 const obsLeft = parseFloat(obs.style.left);
+                 const obsWidth = parseFloat(obs.dataset.width);
+                 // Use the stored *collision* height
+                 const obsCollisionHeight = parseFloat(obs.dataset.height);
+
+                const obsRect = {
+                     left: obsLeft,
+                     right: obsLeft + obsWidth,
+                     bottom: groundHeight, // Base of obstacle is on the ground
+                     top: groundHeight + obsCollisionHeight // Top of *collision box*
+                };
+
+                // AABB Collision Check
+                if (
+                    playerRect.left < obsRect.right &&
+                    playerRect.right > obsRect.left &&
+                    playerRect.bottom < obsRect.top &&
+                    playerRect.top > obsRect.bottom
+                    ) {
+                        // console.log("Collision!", playerRect, obsRect); // Debug collision
+                        gameOver();
+                        return true;
+                }
+            }
+            return false;
+        }
+
+
+        function gameLoop() {
+            if (isGameOver) {
+                 cancelAnimationFrame(gameLoopId);
+                 return;
+            }
+
+            // Increase speed gradually
+            if (gameSpeed < maxGameSpeed) {
+                gameSpeed += acceleration;
+                gameSpeed = Math.min(gameSpeed, maxGameSpeed);
+            }
+
+            updatePlayerPosition();
+            moveObstacles(); // Now correctly triggers subsequent spawns
+            if (!checkCollision()) {
+                 gameLoopId = requestAnimationFrame(gameLoop);
+            }
+        }
+
+
+        function startGame() {
+            if (!isGameOver) return;
+
+            isGameOver = false;
+            playerPositionY = groundHeight;
+            playerVelocityY = 0;
+            score = 0;
+            gameSpeed = baseGameSpeed; // Reset speed
+            player.style.bottom = '0px';
+            player.style.transform = 'rotateY(-15deg) rotateX(5deg)'; // Reset visual transform
+            updateScore();
+            hideMessage();
+            gameContainer.classList.remove('shake');
+
+
+            // Clear obstacles
+            obstacles.forEach(obs => obs.remove());
+            obstacles = [];
+
+             // *** Setup initial spawn ***
+             // Calculate the threshold for the *first* spawn immediately
+             const initialGap = Math.random() * (maxObstacleGap - minObstacleGap) + minObstacleGap;
+             nextObstacleSpawnX = gameWidth - initialGap;
+             spawnObstacle(); // Spawn the very first obstacle
+
+
+            // Start loop
+             cancelAnimationFrame(gameLoopId);
+             gameLoopId = requestAnimationFrame(gameLoop);
+        }
+
+
+        function gameOver() {
+            if (isGameOver) return;
+            isGameOver = true;
+             cancelAnimationFrame(gameLoopId);
+
+            gameContainer.classList.add('shake');
+            setTimeout(() => gameContainer.classList.remove('shake'), 300);
+
+            // Leave player visual position where it died
+             player.style.bottom = `${playerPositionY - groundHeight}px`;
+
+            showMessage(`Game Over!\nScore: ${score}\nClick or Space to Restart`);
+        }
+
+
+        // --- Event Listeners ---
+        function handleInput(e) {
+             e.preventDefault(); // Prevent space scrolling / mobile tap issues
+            if (isGameOver) {
+                startGame();
+            } else {
+                playerJump();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                 handleInput(e);
+            }
+        });
+
+        gameContainer.addEventListener('mousedown', handleInput);
+         gameContainer.addEventListener('touchstart', handleInput, { passive: false });
+
+
+        // --- Initial Setup ---
+        player.style.bottom = '0px'; // Start visually on ground
+        showMessage('Click or Press Space to Start');
+
+    </script>
+
+</body>
+</html>
